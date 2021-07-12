@@ -3,9 +3,9 @@ import './App.css';
 
 import axios from 'axios';
 
-console.log("hello world");
+const key = process.env.REACT_APP_WEATHER_API_KEY;
 
-const request = axios.get('https://api.openweathermap.org/data/2.5/weather?zip=43210,us&appid=224b7a38e454801d04793fddcdfa70e7')
+axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=43210,us&appid=${key}`)
 .then(response => {
 console.log(response.data.main.temp);
 });

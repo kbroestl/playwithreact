@@ -69,6 +69,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
+# API keys go in 'env' files, too
 .env
 .env.test
 
