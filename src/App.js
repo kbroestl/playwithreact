@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 import axios from 'axios';
@@ -13,41 +13,48 @@ const locations = [
   "49931,us" // Houghton, MI
 ];
 
+class LocationContainer extends React.Component {
+  state = {
+    place_data: []
+  };
 
-/*
-pseudocode:
-* set up the locations we're going to care about
-* for each location, and output a div-ish container for each
-* fetch the current weather conditions for each location
-*/
+  componentDidMount() {
+    let pd = [];
+   
+    this.props.locations.forEach((location) => {
+      axios.get(`${api_url}${location}`)
+        .then(response => {
+          pd.push( 
+            <LocationPanel
+              place={response.data}
+              key={response.data.id} />
+          )
+        });
+    });
+    this.setState({place_data: pd});
+  };
 
-function fetch_location(zip) {
-  axios.get(`${api_url}${zip}`).then(response =>
-    console.log(response.data));
+  render() {
+    return(
+      <ul>
+        { this.state.place_data }
+      </ul>
+      )
+    }
+  }
+
+class LocationPanel extends React.Component {
+  render() {
+    const place = this.props.place;
+    return(
+      <li> { place.name } </li>
+    );
+  }
 }
-
-locations.forEach(place => {
-  fetch_location(place);
-})
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LocationContainer locations={locations} api_url={api_url}/>
   );
 }
 
