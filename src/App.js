@@ -14,40 +14,36 @@ const locations = [
 ];
 
 class LocationContainer extends React.Component {
-  state = {
-    place_data: []
-  };
-
-  componentDidMount() {
-    let pd = [];
-   
-    this.props.locations.forEach((location) => {
-      axios.get(`${api_url}${location}`)
-        .then(response => {
-          pd.push( 
-            <LocationPanel
-              place={response.data}
-              key={response.data.id} />
-          )
-        });
-    });
-    this.setState({place_data: pd});
-  };
-
   render() {
     return(
       <ul>
-        { this.state.place_data }
+        { this.props.locations
+            .map(place =>
+          <LocationPanel
+            location = {place}
+            api_url = {api_url} />
+          )
+        }
       </ul>
       )
     }
   }
 
 class LocationPanel extends React.Component {
+  state = {
+    place: []
+  }
+
+  componentDidMount() {
+      axios.get(`${this.props.api_url}${this.props.location}`)
+        .then(response => {
+          this.setState({place : response.data  });
+        });
+  }
+
   render() {
-    const place = this.props.place;
     return(
-      <li> { place.name } </li>
+      <li> { this.state.place.name } </li>
     );
   }
 }
